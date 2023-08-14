@@ -163,3 +163,47 @@ sudo systemctl daemon-reload && sudo systemctl enable alertmanager && sudo syste
 
 sudo systemctl restart prometheus.service
 sudo systemctl restart alertmanager
+
+cd
+sudo apt install curl -y
+
+curl https://sh.rustup.rs -sSf | sh -s -- -y
+
+source $HOME/.cargo/env
+
+sudo apt install make clang pkg-config libssl-dev build-essential -y
+
+sudo apt install git -y
+
+sudo apt search golang-go
+
+sudo apt search gccgo-go
+
+sudo apt install golang-go -y
+
+sudo apt install apt-transport-https curl gnupg -y
+
+curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor >bazel-archive-keyring.gpg
+
+sudo mv bazel-archive-keyring.gpg /usr/share/keyrings
+
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/bazel-archive-keyring.gpg] https://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
+
+sudo apt install -y protobuf-compiler
+
+git clone https://github.com/paritytech/polkadot.git
+
+cd polkadot
+git checkout v1.0.0
+
+./scripts/init.sh
+
+sudo apt install cmake -y
+
+rustup install nightly-2023-05-22
+
+rustup target add wasm32-unknown-unknown --toolchain nightly-2023-05-22
+
+cargo +nightly-2023-05-22 build --release
+
+./target/release/polkadot --validator --name "$NODE" --chain=kusama --database ParityDb --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' --state-pruning 1000 --sync warp --prometheus-external --prometheus-port=9615
