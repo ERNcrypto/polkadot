@@ -4,4 +4,4 @@ source <(curl -s https://raw.githubusercontent.com/ERNcrypto/polkadot/main/monit
 
 
 
-source <(curl -s https://raw.githubusercontent.com/ERNcrypto/polkadot/main/installksm.sh)
+    source <(curl -s https://raw.githubusercontent.com/ERNcrypto/polkadot/main/installksmnew.sh)
