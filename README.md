@@ -1,4 +1,4 @@
-# polkadot
+# POLKADOT
 #    Install monitoring
     source <(curl -s https://raw.githubusercontent.com/ERNcrypto/polkadot/main/monitoring.sh)
 # Install kusama
