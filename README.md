@@ -3,5 +3,5 @@
 #
 
     source <(curl -s https://raw.githubusercontent.com/ERNcrypto/polkadot/main/installksmnew.sh)
-#
-source <(curl -s https://raw.githubusercontent.com/ERNcrypto/polkadot/main/installdot.sh)
+#    
+    source <(curl -s https://raw.githubusercontent.com/ERNcrypto/polkadot/main/installdot.sh)
