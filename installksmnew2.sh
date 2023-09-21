@@ -208,4 +208,4 @@ rustup target add wasm32-unknown-unknown --toolchain nightly-2023-09-13
 
 cargo +nightly-2023-09-132 build --release
 
-./target/release/polkadot --validator --name "$STARTNAME" --chain=kusama --database ParityDb --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' --state-pruning 1000 --sync warp --prometheus-external --prometheus-port=9615
+./target/release/polkadot --validator --name "$STARTNAME" --chain=kusama --database ParityDb --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' --state-pruning 1000 --sync warp --prometheus-external --prometheus-port=9615 --no-beefy
