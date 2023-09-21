@@ -195,7 +195,7 @@ sudo apt install -y protobuf-compiler
 
 git clone https://github.com/paritytech/polkadot-sdk.git 
 
-cd polkadot
+cd polkadot-sdk 
 git checkout v1.1.0
 
 ./scripts/init.sh
