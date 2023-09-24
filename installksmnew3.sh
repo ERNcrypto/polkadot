@@ -210,7 +210,10 @@ cargo +nightly-2023-05-22 build --release
 
 cd
 
-cd polkadot-sdk 
+git clone https://github.com/paritytech/polkadot-sdk.git 
+
+cd polkadot-sdk
+ 
 git checkout v1.1.0
 
 ./scripts/init.sh
