@@ -214,11 +214,11 @@ git clone https://github.com/paritytech/polkadot-sdk.git
 
 cd polkadot-sdk
  
-git checkout v1.1.0
-
-./scripts/init.sh
+git fetch
 
 sudo apt install cmake -y
+
+git checkout polkadot-v1.2.0
 
 rustup install nightly-2023-09-13
 
