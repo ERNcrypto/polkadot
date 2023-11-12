@@ -1,9 +1,9 @@
 # POLKADOT
 #    Install monitoring
     source <(curl -s https://raw.githubusercontent.com/ERNcrypto/polkadot/main/monitoring.sh)
-# Install kusama
-    source <(curl -s https://raw.githubusercontent.com/ERNcrypto/polkadot/main/installksmnew4.sh)
-# Install polkadot
-    source <(curl -s https://raw.githubusercontent.com/ERNcrypto/polkadot/main/installdotnew.sh)
-# Upgrade polkadot
+# Install kusama Parity Db
+    source <(curl -s https://raw.githubusercontent.com/ERNcrypto/polkadot/main/installksmparity.sh)
+# Install polkadot Parity Db
+    source <(curl -s https://raw.githubusercontent.com/ERNcrypto/polkadot/main/installdotparity.sh)
+# Upgrade DOT/KSM
     source <(curl -s https://raw.githubusercontent.com/ERNcrypto/polkadot/main/upgrade.sh)
