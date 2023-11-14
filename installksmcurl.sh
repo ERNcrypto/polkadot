@@ -1,12 +1,12 @@
 #!/bin/bash
-sudo read -p "Enter NODE name:" NODE
-sudo echo 'export NODE='$NODE
-sudo read -p "Enter IP server :" IP
-sudo echo 'export IP='$IP
-sudo read -p "TOKEN telegrambot:" TOKEN
-sudo echo 'export TOKEN='$TOKEN
-sudo read -p "Enter STARTNAME :" STARTNAME
-sudo echo 'export STARTNAME='$STARTNAME
+read -p "Enter NODE name:" NODE
+echo 'export NODE='$NODE
+read -p "Enter IP server :" IP
+echo 'export IP='$IP
+read -p "TOKEN telegrambot:" TOKEN
+echo 'export TOKEN='$TOKEN
+read -p "Enter STARTNAME :" STARTNAME
+echo 'export STARTNAME='$STARTNAME
 
 sudo wget $(curl -s https://api.github.com/repos/prometheus/node_exporter/releases/latest |grep "tag_name" | awk '{print "https://github.com/prometheus/node_exporter/releases/download/" substr($2, 2, length($2)-3) "/node_exporter-" substr($2, 3, length($2)-4) ".linux-amd64.tar.gz"}')
 
