@@ -1,12 +1,12 @@
 #!/bin/bash
-read -p "Enter NODE name:" NODE
-echo 'export NODE='$NODE
-read -p "Enter IP server :" IP
-echo 'export IP='$IP
-read -p "TOKEN telegrambot:" TOKEN
-echo 'export TOKEN='$TOKEN
-read -p "Enter STARTNAME :" STARTNAME
-echo 'export STARTNAME='$STARTNAME
+sudo read -p "Enter NODE name:" NODE
+sudo echo 'export NODE='$NODE
+sudo read -p "Enter IP server :" IP
+sudo echo 'export IP='$IP
+sudo read -p "TOKEN telegrambot:" TOKEN
+sudo echo 'export TOKEN='$TOKEN
+sudo read -p "Enter STARTNAME :" STARTNAME
+sudo echo 'export STARTNAME='$STARTNAME
 
 sudo wget $(curl -s https://api.github.com/repos/prometheus/node_exporter/releases/latest |grep "tag_name" | awk '{print "https://github.com/prometheus/node_exporter/releases/download/" substr($2, 2, length($2)-3) "/node_exporter-" substr($2, 3, length($2)-4) ".linux-amd64.tar.gz"}')
 
@@ -106,7 +106,7 @@ sudo mkdir /etc/alertmanager /var/lib/prometheus/alertmanager
 
 cd alertmanager-0.24.0.linux-amd64
 
-cp alertmanager amtool /usr/local/bin/ && cp alertmanager.yml /etc/alertmanager
+sudo cp alertmanager amtool /usr/local/bin/ && cp alertmanager.yml /etc/alertmanager
 
 sudo useradd --no-create-home --shell /bin/false alertmanager
 
@@ -189,7 +189,7 @@ sudo curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor >bazel
 
 sudo mv bazel-archive-keyring.gpg /usr/share/keyrings
 
-echo "deb [arch=amd64 signed-by=/usr/share/keyrings/bazel-archive-keyring.gpg] https://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
+sudo echo "deb [arch=amd64 signed-by=/usr/share/keyrings/bazel-archive-keyring.gpg] https://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
 
 sudo apt install -y protobuf-compiler
 
