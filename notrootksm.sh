@@ -39,7 +39,11 @@ rustup install nightly-2023-09-13
 
 rustup target add wasm32-unknown-unknown --toolchain nightly-2023-09-13
 
+cd
+
 sudo chmod -R 777 ./polkadot-sdk
+
+cd polkadot-sdk
 
 cargo +nightly-2023-09-13 build --release
 
