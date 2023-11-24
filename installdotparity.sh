@@ -202,9 +202,9 @@ git checkout v1.0.0
 
 sudo apt install cmake -y
 
-rustup install nightly-2023-05-22
+rustup install nightly-2023-09-13
 
-rustup target add wasm32-unknown-unknown --toolchain nightly-2023-05-22
+rustup target add wasm32-unknown-unknown --toolchain nightly-2023-09-13
 
 cargo +nightly-2023-05-22 build --release
 
@@ -214,15 +214,11 @@ git clone https://github.com/paritytech/polkadot-sdk.git
 
 cd polkadot-sdk
  
-git checkout v1.1.0
+git checkout v1.4.0
 
 ./scripts/init.sh
 
 sudo apt install cmake -y
-
-rustup install nightly-2023-09-13
-
-rustup target add wasm32-unknown-unknown --toolchain nightly-2023-09-13
 
 cargo +nightly-2023-09-13 build --release
 
