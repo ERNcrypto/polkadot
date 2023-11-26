@@ -33,7 +33,7 @@ sudo git fetch
 
 sudo apt install cmake -y
 
-sudo git checkout polkadot-v1.3.0
+sudo git checkout v1.4.0
 
 rustup install nightly-2023-09-13
 
