@@ -203,10 +203,10 @@ sudo apt install cmake -y
 
 sudo git checkout v1.5.0
 
-rustup install nightly-2023-09-13
+rustup install nightly-2023-05-22
 
-rustup target add wasm32-unknown-unknown --toolchain nightly-2023-09-13
+rustup target add wasm32-unknown-unknown --toolchain nightly-2023-05-22
 
-cargo +nightly-2023-09-13 build --release
+cargo +nightly-2023-05-22 build --release
 
 ./target/release/polkadot --validator --name "$STARTNAME" --chain=kusama --database RocksDb --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' --state-pruning 1000 --prometheus-external --prometheus-port=9615 
