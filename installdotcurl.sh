@@ -213,6 +213,8 @@ rustup install nightly-2023-05-22
 
 rustup target add wasm32-unknown-unknown --toolchain nightly-2023-05-22
 
+sudo apt-get install -y git clang curl make libssl-dev llvm libudev-dev protobuf-compiler
+
 cargo +nightly-2023-05-22 build --release
 
 ./target/release/polkadot --validator --name "$STARTNAME" --chain=polkadot --database RocksDb --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' --state-pruning 1000 --sync warp --prometheus-external --prometheus-port=9615
