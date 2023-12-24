@@ -193,14 +193,21 @@ echo "deb [arch=amd64 signed-by=/usr/share/keyrings/bazel-archive-keyring.gpg] h
 
 sudo apt install -y protobuf-compiler
 
-git clone https://github.com/paritytech/polkadot.git
+cd
 
-cd polkadot
-git checkout v1.0.0
+git clone https://github.com/paritytech/polkadot-sdk.git 
+
+cd polkadot-sdk
+ 
+git checkout polkadot-v1.5.0
 
 ./scripts/init.sh
 
 sudo apt install cmake -y
+
+rustup component add rust-src
+
+rustup target add wasm32-unknown-unknown
 
 rustup install nightly-2023-05-22
 
@@ -208,22 +215,4 @@ rustup target add wasm32-unknown-unknown --toolchain nightly-2023-05-22
 
 cargo +nightly-2023-05-22 build --release
 
-cd
-
-git clone https://github.com/paritytech/polkadot-sdk.git 
-
-cd polkadot-sdk
- 
-git checkout v1.4.0
-
-./scripts/init.sh
-
-sudo apt install cmake -y
-
-rustup install nightly-2023-09-13
-
-rustup target add wasm32-unknown-unknown --toolchain nightly-2023-09-13
-
-cargo +nightly-2023-09-13 build --release
-
-./target/release/polkadot --validator --name "$STARTNAME" --chain=polkadot --database RocksDb --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' --state-pruning 1000 --prometheus-external --prometheus-port=9615
+./target/release/polkadot --validator --name "$STARTNAME" --chain=polkadot --database RocksDb --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' --state-pruning 1000 --sync warp --prometheus-external --prometheus-port=9615
