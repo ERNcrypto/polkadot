@@ -201,8 +201,6 @@ cd polkadot-sdk
  
 git checkout polkadot-v1.5.0
 
-./scripts/init.sh
-
 sudo apt install cmake -y
 
 rustup component add rust-src
