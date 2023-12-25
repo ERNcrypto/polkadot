@@ -8,14 +8,14 @@ echo 'export TOKEN='$TOKEN
 read -p "Enter STARTNAME :" STARTNAME
 echo 'export STARTNAME='$STARTNAME
 
-sudo wget $(curl -s https://api.github.com/repos/prometheus/node_exporter/releases/latest |grep "tag_name" | awk '{print "https://github.com/prometheus/node_exporter/releases/download/" substr($2, 2, length($2)-3) "/node_exporter-" substr($2, 3, length($2)-4) ".linux-amd64.tar.gz"}')
+wget $(curl -s https://api.github.com/repos/prometheus/node_exporter/releases/latest |grep "tag_name" | awk '{print "https://github.com/prometheus/node_exporter/releases/download/" substr($2, 2, length($2)-3) "/node_exporter-" substr($2, 3, length($2)-4) ".linux-amd64.tar.gz"}')
 
-sudo tar xvf node_exporter-*.tar.gz
+tar xvf node_exporter-*.tar.gz
 sudo cp ./node_exporter-*.linux-amd64/node_exporter /usr/local/bin/
 
 sudo useradd --no-create-home --shell /usr/sbin/nologin node_exporter
 
-sudo rm -rf ./node_exporter*
+rm -rf ./node_exporter*
 
 sudo tee /etc/systemd/system/node_exporter.service > /dev/null <<EOF
 [Unit]
@@ -35,9 +35,9 @@ sudo systemctl daemon-reload
 sudo systemctl start node_exporter.service
 sudo systemctl enable node_exporter.service
 
-sudo wget $(curl -s https://api.github.com/repos/prometheus/prometheus/releases/latest |grep "tag_name" | awk '{print "https://github.com/prometheus/prometheus/releases/download/" substr($2, 2, length($2)-3) "/prometheus-" substr($2, 3, length($2)-4) ".linux-amd64.tar.gz"}')
+wget $(curl -s https://api.github.com/repos/prometheus/prometheus/releases/latest |grep "tag_name" | awk '{print "https://github.com/prometheus/prometheus/releases/download/" substr($2, 2, length($2)-3) "/prometheus-" substr($2, 3, length($2)-4) ".linux-amd64.tar.gz"}')
 
-sudo tar xvf prometheus-*.tar.gz
+tar xvf prometheus-*.tar.gz
 sudo cp ./prometheus-*.linux-amd64/prometheus /usr/local/bin/
 sudo cp ./prometheus-*.linux-amd64/promtool /usr/local/bin/ 
 sudo cp -r ./prometheus-*.linux-amd64/consoles /etc/prometheus
@@ -49,7 +49,7 @@ sudo mkdir /var/lib/prometheus
 sudo chown -R prometheus:prometheus /etc/prometheus
 sudo chown -R prometheus:prometheus /var/lib/prometheus
 
-sudo rm -rf ./prometheus*
+rm -rf ./prometheus*
 
 sudo tee /etc/prometheus/prometheus.yml > /dev/null <<EOF
 global:
@@ -98,21 +98,21 @@ sudo systemctl start prometheus.service
 sudo systemctl enable prometheus.service
 
 cd ~
-sudo wget https://github.com/prometheus/alertmanager/releases/download/v0.24.0/alertmanager-0.24.0.linux-amd64.tar.gz;
-sudo tar xvf alertmanager-0.24.0.linux-amd64.tar.gz
-sudo rm alertmanager-0.24.0.linux-amd64.tar.gz
+wget https://github.com/prometheus/alertmanager/releases/download/v0.24.0/alertmanager-0.24.0.linux-amd64.tar.gz;
+tar xvf alertmanager-0.24.0.linux-amd64.tar.gz
+rm alertmanager-0.24.0.linux-amd64.tar.gz
 
-sudo mkdir /etc/alertmanager /var/lib/prometheus/alertmanager
+mkdir /etc/alertmanager /var/lib/prometheus/alertmanager
 
 cd alertmanager-0.24.0.linux-amd64
 
-sudo cp alertmanager amtool /usr/local/bin/ && cp alertmanager.yml /etc/alertmanager
+cp alertmanager amtool /usr/local/bin/ && cp alertmanager.yml /etc/alertmanager
 
-sudo useradd --no-create-home --shell /bin/false alertmanager
+useradd --no-create-home --shell /bin/false alertmanager
 
-sudo chown -R alertmanager:alertmanager /etc/alertmanager 
+chown -R alertmanager:alertmanager /etc/alertmanager 
 /var/lib/prometheus/alertmanager
-sudo chown alertmanager:alertmanager /usr/local/bin/{alertmanager,amtool}
+chown alertmanager:alertmanager /usr/local/bin/{alertmanager,amtool}
 
 sudo tee /etc/systemd/system/alertmanager.service > /dev/null <<EOF
 [Unit]
@@ -169,7 +169,7 @@ sudo systemctl restart alertmanager
 cd
 sudo apt install curl -y
 
-sudo curl https://sh.rustup.rs -sSf | sh -s -- -y
+curl https://sh.rustup.rs -sSf | sh -s -- -y
 
 source $HOME/.cargo/env
 
@@ -185,28 +185,36 @@ sudo apt install golang-go -y
 
 sudo apt install apt-transport-https curl gnupg -y
 
-sudo curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor >bazel-archive-keyring.gpg
+curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor >bazel-archive-keyring.gpg
 
 sudo mv bazel-archive-keyring.gpg /usr/share/keyrings
 
-sudo echo "deb [arch=amd64 signed-by=/usr/share/keyrings/bazel-archive-keyring.gpg] https://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/bazel-archive-keyring.gpg] https://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
 
 sudo apt install -y protobuf-compiler
 
-sudo git clone https://github.com/paritytech/polkadot-sdk.git 
+cd
+
+git clone https://github.com/paritytech/polkadot-sdk.git 
 
 cd polkadot-sdk
  
-git fetch
+git checkout polkadot-v1.5.0
+
+./scripts/init.sh
 
 sudo apt install cmake -y
 
-sudo git checkout v1.5.0
+rustup component add rust-src
+
+rustup target add wasm32-unknown-unknown
 
 rustup install nightly-2023-05-22
 
 rustup target add wasm32-unknown-unknown --toolchain nightly-2023-05-22
 
+sudo apt-get install -y git clang curl make libssl-dev llvm libudev-dev protobuf-compiler
+
 cargo +nightly-2023-05-22 build --release
 
-./target/release/polkadot --validator --name "$STARTNAME" --chain=kusama --database RocksDb --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' --state-pruning 1000 --prometheus-external --prometheus-port=9615 
+./target/release/polkadot --validator --name "$STARTNAME" --chain=kusama --database RocksDb --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' --state-pruning 1000 --prometheus-external --prometheus-port=9615
