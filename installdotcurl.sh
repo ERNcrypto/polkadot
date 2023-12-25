@@ -199,7 +199,7 @@ git clone https://github.com/paritytech/polkadot-sdk.git
 
 cd polkadot-sdk
  
-git checkout polkadot-v1.4.0
+git checkout polkadot-v1.5.0
 
 ./scripts/init.sh
 
