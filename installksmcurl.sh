@@ -205,6 +205,8 @@ sudo apt install cmake -y
 
 rustup component add rust-src
 
+sudo apt install rustup component add rust-src -y
+
 rustup target add wasm32-unknown-unknown
 
 rustup install nightly-2023-05-22
@@ -215,4 +217,4 @@ sudo apt-get install -y git clang curl make libssl-dev llvm libudev-dev protobuf
 
 cargo +nightly-2023-05-22 build --release
 
-./target/release/polkadot --validator --name "$STARTNAME" --chain=kusama --database RocksDb --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' --state-pruning 1000 --prometheus-external --prometheus-port=9615
+./target/release/polkadot --validator --name "$STARTNAME" --chain=kusama --database RocksDb --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' --state-pruning 1000 --prometheus-external --prometheus-port=9615 --insecure-validator-i-know-what-i-do
