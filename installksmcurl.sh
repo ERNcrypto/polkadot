@@ -199,7 +199,7 @@ git clone https://github.com/paritytech/polkadot-sdk.git
 
 cd polkadot-sdk
  
-git checkout polkadot-v1.6.0
+git checkout polkadot-v1.7.0
 
 sudo apt install cmake -y
 
