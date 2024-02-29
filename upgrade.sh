@@ -1,20 +1,20 @@
 sudo git fetch
 
-git checkout polkadot-v1.7.0
+git checkout polkadot-v1.8.0
 
-rustup component add rust-src
+sudo rustup component add rust-src
 
 sudo apt install rustup component add rust-src -y
 
-rustup target add wasm32-unknown-unknown
+sudo rustup target add wasm32-unknown-unknown
 
-rustup install nightly-2023-05-22
+sudo rustup install nightly-2023-05-22
 
-rustup target add wasm32-unknown-unknown --toolchain nightly-2023-05-22
+sudo rustup target add wasm32-unknown-unknown --toolchain nightly-2023-05-22
 
 sudo apt-get install -y git clang curl make libssl-dev llvm libudev-dev protobuf-compiler
 
-rustup update
+sudo rustup update
 
 cargo build --release
 
