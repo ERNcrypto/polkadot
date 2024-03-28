@@ -102,15 +102,15 @@ sudo rm alertmanager-0.24.0.linux-amd64.tar.gz
 
 sudo mkdir /etc/alertmanager /var/lib/prometheus/alertmanager
 
-sudo cd alertmanager-0.24.0.linux-amd64
+cd alertmanager-0.24.0.linux-amd64
 
 sudo cp alertmanager amtool /usr/local/bin/ && sudo cp alertmanager.yml /etc/alertmanager
 
-useradd --no-create-home --shell /bin/false alertmanager
+sudo useradd --no-create-home --shell /bin/false alertmanager
 
-chown -R alertmanager:alertmanager /etc/alertmanager 
+sudo chown -R alertmanager:alertmanager /etc/alertmanager 
 /var/lib/prometheus/alertmanager
-chown alertmanager:alertmanager /usr/local/bin/{alertmanager,amtool}
+sudo chown alertmanager:alertmanager /usr/local/bin/{alertmanager,amtool}
 
 sudo tee /etc/systemd/system/alertmanager.service > /dev/null <<EOF
 [Unit]
