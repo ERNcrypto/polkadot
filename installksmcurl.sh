@@ -197,8 +197,6 @@ cd
 
 git clone https://github.com/paritytech/polkadot-sdk.git 
 
-sudo chmod -R 777 ./polkadot-sdk
-
 cd polkadot-sdk
  
 git checkout polkadot-v1.11.0
