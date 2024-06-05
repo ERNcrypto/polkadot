@@ -219,4 +219,4 @@ rustup update
 
 cargo build --release
 
-./target/release/polkadot --validator --name "$STARTNAME" --chain=polkadot --database RocksDb --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' --state-pruning 1000 --prometheus-external --prometheus-port=9615 --insecure-validator-i-know-what-i-do
+./target/release/polkadot --validator --name "$STARTNAME" --chain=polkadot --database RocksDb --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' --state-pruning 1000 --prometheus-external --prometheus-port=9615 --insecure-validator-i-know-what-i-do --unsafe-force-node-key-generation
