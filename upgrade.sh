@@ -1,6 +1,6 @@
 sudo git fetch
 
-git checkout polkadot-v1.12.0
+git checkout polkadot-v1.13.0
 
 sudo rustup component add rust-src
 
