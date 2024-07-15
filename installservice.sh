@@ -205,3 +205,15 @@ RestartSec=10
 Environment="STARTNAME=$STARTNAME"
 
 [Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl enable polkadot.service
+sudo systemctl start polkadot.service
+
+
+
+
+
+
