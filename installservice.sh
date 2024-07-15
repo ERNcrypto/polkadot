@@ -1,56 +1,207 @@
 #!/bin/bash
 
-sudo apt update
-gpg --recv-keys --keyserver hkps://keys.mailvelope.com 9D4B2B6EB8F97156D19669A9FF0812D491B96798
-gpg --export 9D4B2B6EB8F97156D19669A9FF0812D491B96798 > /usr/share/keyrings/parity.gpg
-echo 'deb [signed-by=/usr/share/keyrings/parity.gpg] https://releases.parity.io/deb release main' > /etc/apt/sources.list.d/parity.list
-sudo apt update
-sudo apt install parity-keyring
-sudo apt install polkadot
+# Переменные
+read -p "Enter NODE name: " NODE
+echo "export NODE='$NODE'"
+read -p "Enter IP server: " IP
+echo "export IP='$IP'"
+read -p "TOKEN telegrambot: " TOKEN
+echo "export TOKEN='$TOKEN'"
+read -p "Enter STARTNAME: " STARTNAME
+echo "export STARTNAME='$STARTNAME'"
 
+USER=$(whoami)
+POLKADOT_PATH="$HOME/polkadot-sdk/target/release/polkadot"
 
-sudo tee /usr/lib/systemd/system/polkadot.service > /dev/null << EOF
+# Установка и настройка Node Exporter
+sudo wget $(curl -s https://api.github.com/repos/prometheus/node_exporter/releases/latest | grep "tag_name" | awk '{print "https://github.com/prometheus/node_exporter/releases/download/" substr($2, 2, length($2)-3) "/node_exporter-" substr($2, 3, length($2)-4) ".linux-amd64.tar.gz"}')
+sudo tar xvf node_exporter-*.tar.gz
+sudo cp ./node_exporter-*.linux-amd64/node_exporter /usr/local/bin/
+sudo useradd --no-create-home --shell /usr/sbin/nologin node_exporter
+sudo rm -rf ./node_exporter*
+sudo tee /etc/systemd/system/node_exporter.service > /dev/null <<EOF
 [Unit]
-Description=kusama
-After=network.target
-Documentation=https://github.com/paritytech/polkadot
-OnFailure=unit-status-mail@%n.service
-StartLimitIntervalSec=200
-StartLimitBurst=2
+Description=Node Exporter
+Wants=network-online.target
+After=network-online.target
 
 [Service]
-ExecStart=/usr/bin/polkadot --chain kusama --name test0001 --validator --state-pruning 1000 --port 30333 --rpc-port 9901 --ws-port 9801 --prometheus-port 9601 --prometheus-external --base-path /home/polkadot/ --database paritydb --sync warp --telemetry-url 'wss://telemetry.polkadot.io/submit/ 1' 
-User=polkadot
-Group=polkadot
-Restart=always
-RestartSec=30
-CapabilityBoundingSet=
-LockPersonality=true
-NoNewPrivileges=true
-PrivateDevices=true
-PrivateMounts=true
-PrivateTmp=true
-PrivateUsers=true
-ProtectClock=true
-ProtectControlGroups=true
-ProtectHostname=true
-ProtectKernelModules=true
-ProtectKernelTunables=true
-ProtectSystem=strict
-RemoveIPC=true
-RestrictAddressFamilies=AF_INET AF_INET6 AF_NETLINK AF_UNIX
-RestrictNamespaces=true
-RestrictSUIDSGID=true
-SystemCallArchitectures=native
-SystemCallFilter=@system-service
-SystemCallFilter=~@clock @module @mount @reboot @swap @privileged
-UMask=0027
+User=node_exporter
+Group=node_exporter
+Type=simple
+ExecStart=/usr/local/bin/node_exporter
 
 [Install]
 WantedBy=multi-user.target
 EOF
-
 sudo systemctl daemon-reload
-sudo systemctl start polkadot.service
-sudo systemctl enable polkadot.service
-sudo journalctl -u polkadot.service -f
+sudo systemctl start node_exporter.service
+sudo systemctl enable node_exporter.service
+
+# Установка и настройка Prometheus
+sudo wget $(curl -s https://api.github.com/repos/prometheus/prometheus/releases/latest | grep "tag_name" | awk '{print "https://github.com/prometheus/prometheus/releases/download/" substr($2, 2, length($2)-3) "/prometheus-" substr($2, 3, length($2)-4) ".linux-amd64.tar.gz"}')
+sudo tar xvf prometheus-*.tar.gz
+sudo cp ./prometheus-*.linux-amd64/prometheus /usr/local/bin/
+sudo cp ./prometheus-*.linux-amd64/promtool /usr/local/bin/
+sudo cp -r ./prometheus-*.linux-amd64/consoles /etc/prometheus
+sudo cp -r ./prometheus-*.linux-amd64/console_libraries /etc/prometheus
+sudo useradd --no-create-home --shell /usr/sbin/nologin prometheus
+sudo mkdir /var/lib/prometheus
+sudo chown -R prometheus:prometheus /etc/prometheus
+sudo chown -R prometheus:prometheus /var/lib/prometheus
+sudo rm -rf ./prometheus*
+sudo tee /etc/prometheus/prometheus.yml > /dev/null <<EOF
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+rule_files:
+  - 'rules.yml'
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets:
+      - $IP:9093
+scrape_configs:
+  - job_name: "$NODE"
+    scrape_interval: 5s
+    static_configs:
+      - targets: ["$IP:9090", "$IP:9615"]
+EOF
+sudo tee /etc/systemd/system/prometheus.service > /dev/null <<EOF
+[Unit]
+Description=Prometheus Monitoring
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=prometheus
+Group=prometheus
+Type=simple
+ExecStart=/usr/local/bin/prometheus \
+  --config.file /etc/prometheus/prometheus.yml \
+  --storage.tsdb.path /var/lib/prometheus/ \
+  --web.console.templates=/etc/prometheus/consoles \
+  --web.console.libraries=/etc/prometheus/console_libraries \
+  --storage.tsdb.retention.time 30d \
+  --web.enable-admin-api
+ExecReload=/bin/kill -HUP \$MAINPID
+
+[Install]
+WantedBy=multi-user.target
+EOF
+cd /etc/prometheus
+sudo chown prometheus:prometheus rules.yml
+sudo systemctl daemon-reload
+sudo systemctl start prometheus.service
+sudo systemctl enable prometheus.service
+
+# Установка и настройка Alertmanager
+cd ~
+sudo wget https://github.com/prometheus/alertmanager/releases/download/v0.24.0/alertmanager-0.24.0.linux-amd64.tar.gz
+sudo tar xvf alertmanager-0.24.0.linux-amd64.tar.gz
+sudo rm alertmanager-0.24.0.linux-amd64.tar.gz
+sudo mkdir /etc/alertmanager /var/lib/prometheus/alertmanager
+cd alertmanager-0.24.0.linux-amd64
+sudo cp alertmanager amtool /usr/local/bin/
+sudo cp alertmanager.yml /etc/alertmanager
+useradd --no-create-home --shell /bin/false alertmanager
+sudo chown -R alertmanager:alertmanager /etc/alertmanager /var/lib/prometheus/alertmanager
+sudo chown alertmanager:alertmanager /usr/local/bin/{alertmanager,amtool}
+sudo tee /etc/systemd/system/alertmanager.service > /dev/null <<EOF
+[Unit]
+Description=AlertManager Server Service
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=alertmanager
+Group=alertmanager
+Type=simple
+ExecStart=/usr/local/bin/alertmanager --config.file /etc/alertmanager/alertmanager.yml --web.external-url=http://$IP:9093 --cluster.advertise-address='0.0.0.0:9093'
+
+[Install]
+WantedBy=multi-user.target
+EOF
+sudo tee /etc/alertmanager/alertmanager.yml > /dev/null <<EOF
+route:
+  group_by: ['alertname', 'instance', 'severity']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 1h
+  receiver: 'telepush'
+
+receivers:
+  - name: 'telepush'
+    webhook_configs:
+      - url: 'https://telepush.dev/api/inlets/alertmanager/$TOKEN'
+
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'dev', 'instance']
+EOF
+sudo tee /etc/prometheus/rules.yml > /dev/null <<EOF
+groups:
+  - name: alert_rules
+    rules:
+      - alert: $NODE
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "$NODE"
+          description: "Node has been down for more than 1 minute."
+EOF
+sudo systemctl daemon-reload && sudo systemctl enable alertmanager && sudo systemctl start alertmanager
+sudo systemctl restart prometheus.service
+sudo systemctl restart alertmanager
+
+# Установка зависимостей для Polkadot
+cd
+sudo apt install curl -y
+curl https://sh.rustup.rs -sSf | sh -s -- -y
+source $HOME/.cargo/env
+sudo apt install make clang pkg-config libssl-dev build-essential -y
+sudo apt install git -y
+sudo apt search golang-go
+sudo apt search gccgo-go
+sudo apt install golang-go -y
+sudo apt install apt-transport-https curl gnupg -y
+curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor > bazel-archive-keyring.gpg
+sudo mv bazel-archive-keyring.gpg /usr/share/keyrings
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/bazel-archive-keyring.gpg] https://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
+sudo apt install -y protobuf-compiler
+
+# Сборка Polkadot
+cd
+git clone https://github.com/paritytech/polkadot-sdk.git
+cd polkadot-sdk
+git checkout polkadot-v1.14.0
+sudo apt install cmake -y
+rustup component add rust-src
+rustup target add wasm32-unknown-unknown
+rustup install nightly-2024-01-21
+rustup target add wasm32-unknown-unknown --toolchain nightly-2024-01-21
+sudo apt-get install -y git clang curl make libssl-dev llvm libudev-dev protobuf-compiler
+rustup update
+cargo build --release
+
+# Создание systemd-сервиса для Polkadot
+SERVICE_FILE="/etc/systemd/system/polkadot.service"
+sudo tee $SERVICE_FILE > /dev/null <<EOF
+[Unit]
+Description=Polkadot Validator Service
+After=network.target
+
+[Service]
+Type=simple
+User=$USER
+ExecStart=$POLKADOT_PATH --validator --name "$STARTNAME" --chain=kusama --database RocksDb --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' --state-pruning 1000 --prometheus-external --prometheus-port=9615 --insecure-validator-i-know-what-i-do --unsafe-force-node-key-generation
+Restart=always
+RestartSec=10
+Environment="STARTNAME=$STARTNAME"
+
+[Install]
