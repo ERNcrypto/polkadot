@@ -156,7 +156,7 @@ groups:
   - name: alert_rules
     rules:
       - alert: $NODE
-        expr: up == 0
+        expr: up{job="kusama_node"} == 0
         for: 1m
         labels:
           severity: critical
@@ -165,7 +165,7 @@ groups:
           description: "Node has been down for more than 1 minute."
       - alert: KusamaNodeSyncLag
         expr: (max(chain_head_height{job="kusama_node"}) - max(chain_node_height{job="kusama_node"})) > 20
-        for: 1m
+        for: 5m
         labels:
           severity: critical
         annotations:
@@ -184,4 +184,4 @@ EOF
 sudo systemctl daemon-reload && sudo systemctl enable alertmanager && sudo systemctl start alertmanager
 
 sudo systemctl restart prometheus.service
-sudo systemctl restart alertmanager
+sudo systemctl restart alertmanager 
