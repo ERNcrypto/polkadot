@@ -5,6 +5,8 @@ read -p "Enter IP server :" IP
 echo 'export IP='$IP
 read -p "TOKEN telegrambot:" TOKEN
 echo 'export TOKEN='$TOKEN
+read -p "Enter STARTNAME :" STARTNAME
+echo 'export STARTNAME='$STARTNAME
 
 sudo wget $(curl -s https://api.github.com/repos/prometheus/node_exporter/releases/latest |grep "tag_name" | awk '{print "https://github.com/prometheus/node_exporter/releases/download/" substr($2, 2, length($2)-3) "/node_exporter-" substr($2, 3, length($2)-4) ".linux-amd64.tar.gz"}')
 
@@ -106,7 +108,7 @@ cd alertmanager-0.24.0.linux-amd64
 
 sudo cp alertmanager amtool /usr/local/bin/ && sudo cp alertmanager.yml /etc/alertmanager
 
-sudo useradd --no-create-home --shell /bin/false alertmanager
+useradd --no-create-home --shell /bin/false alertmanager
 
 sudo chown -R alertmanager:alertmanager /etc/alertmanager 
 /var/lib/prometheus/alertmanager
@@ -156,7 +158,23 @@ groups:
           severity: critical
         annotations:
           summary: "$NODE"
-          description: "Node has been down for more than 1 minute."          
+          description: "Node has been down for more than 1 minute."
+      - alert: KusamaNodeSyncLag
+        expr: (max(chain_head_height{job="$NODE"}) - max(chain_node_height{job="$NODE"})) > 20
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "$NODE is lagging behind"
+          description: "Node $NODE is lagging more than 20 blocks behind the network."
+      - alert: HighDiskUsage
+        expr: (node_filesystem_avail_bytes{job="node_exporter",fstype!="tmpfs",fstype!="sysfs",fstype!="proc"} / node_filesystem_size_bytes{job="node_exporter",fstype!="tmpfs",fstype!="sysfs",fstype!="proc"}) * 100 < 5
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High disk usage on $NODE"
+          description: "Disk usage is above 95% on $NODE."
 EOF
 
 sudo systemctl daemon-reload && sudo systemctl enable alertmanager && sudo systemctl start alertmanager
