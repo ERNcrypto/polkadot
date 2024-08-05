@@ -167,6 +167,14 @@ groups:
         annotations:
           summary: "$NODE is lagging behind"
           description: "Node $NODE is lagging more than 20 blocks behind the network."
+      - alert: HighDiskUsage
+        expr: (node_filesystem_avail_bytes{job="node_exporter",fstype!="tmpfs",fstype!="sysfs",fstype!="proc"} / node_filesystem_size_bytes{job="node_exporter",fstype!="tmpfs",fstype!="sysfs",fstype!="proc"}) * 100 < 5
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High disk usage on $NODE"
+          description: "Disk usage is above 95% on $NODE."
 EOF
 
 sudo systemctl daemon-reload && sudo systemctl enable alertmanager && sudo systemctl start alertmanager
