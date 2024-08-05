@@ -1,7 +1,7 @@
 #!/bin/bash
 read -p "Enter NODE name:" NODE
 echo 'export NODE='$NODE
-read -p "Enter IP server :" IP
+read -p "Enter IP server:" IP
 echo 'export IP='$IP
 read -p "TOKEN telegrambot:" TOKEN
 echo 'export TOKEN='$TOKEN
@@ -18,7 +18,7 @@ sudo tee /etc/systemd/system/node_exporter.service > /dev/null <<EOF
   Description=Node Exporter
   Wants=network-online.target
   After=network-online.target
-[Service]
+[Service] 
   User=node_exporter
   Group=node_exporter
   Type=simple
@@ -92,14 +92,6 @@ sudo tee rules.yml > /dev/null <<EOF
 groups:
   - name: alert_rules
     rules:
-      - alert: NodeDown
-        expr: up{job="kusama_node"} == 0
-        for: 1m
-        labels:
-          severity: critical
-        annotations:
-          summary: "Node $NODE down"
-          description: "Node $NODE has been down for more than 1 minute."
       - alert: KusamaNodeSyncLag
         expr: (max(chain_head_height{job="kusama_node"}) - max(chain_node_height{job="kusama_node"})) > 20
         for: 5m
@@ -108,8 +100,16 @@ groups:
         annotations:
           summary: "Node $NODE lagging behind"
           description: "Node $NODE is lagging more than 20 blocks behind the network."
+      - alert: NodeDown
+        expr: up{job="kusama_node"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Node $NODE down"
+          description: "Node $NODE has been down for more than 1 minute."
       - alert: HighDiskUsage
-        expr: (node_filesystem_avail_bytes{job="node_exporter",fstype!="tmpfs",fstype!="sysfs",fstype!="proc"} / node_filesystem_size_bytes{job="node_exporter",fstype!="tmpfs",fstype!="sysfs",fstype!="proc"}) * 100 < 5
+        expr: (node_filesystem_avail_bytes{job="node_exporter", fstype!="tmpfs", fstype!="sysfs", fstype!="proc"} / node_filesystem_size_bytes{job="node_exporter", fstype!="tmpfs", fstype!="sysfs", fstype!="proc"}) * 100 < 5
         for: 5m
         labels:
           severity: critical
@@ -192,4 +192,4 @@ sudo systemctl enable alertmanager
 sudo systemctl start alertmanager
 
 sudo systemctl restart prometheus.service
-sudo systemctl restart alertmanager
+sudo systemctl restart alertmanager.service
