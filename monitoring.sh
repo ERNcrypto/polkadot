@@ -63,10 +63,14 @@ alerting:
     - targets:
       - $IP:9093
 scrape_configs:
-  - job_name: "$NODE"
+  - job_name: "node_exporter"
     scrape_interval: 5s
     static_configs:
-      - targets: ["$IP:9090","$IP:9615"]
+      - targets: ["$IP:9100"]
+  - job_name: "kusama_node"
+    scrape_interval: 5s
+    static_configs:
+      - targets: ["$IP:9615"]
 EOF
 
 sudo tee /etc/systemd/system/prometheus.service > /dev/null <<EOF
@@ -160,7 +164,7 @@ groups:
           summary: "$NODE"
           description: "Node has been down for more than 1 minute."
       - alert: KusamaNodeSyncLag
-        expr: (max(chain_head_height{job="$NODE"}) - max(chain_node_height{job="$NODE"})) > 20
+        expr: (max(chain_head_height{job="kusama_node"}) - max(chain_node_height{job="kusama_node"})) > 20
         for: 1m
         labels:
           severity: critical
