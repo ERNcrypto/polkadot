@@ -117,10 +117,10 @@ groups:
           summary: "High disk usage on $NODE"
           description: "Disk usage is above 95% on $NODE."
       - alert: KusamaNodeNotSyncing
-        expr: sum(chain_is_syncing{job="kusama_node"}) == 0
+        expr: chain_is_syncing{job="kusama_node"} == 0
         for: 5m
         labels:
-          severity: warning
+          severity: critical
         annotations:
           summary: "Node $NODE not syncing"
           description: "Node $NODE is not syncing blocks for more than 5 minutes."
