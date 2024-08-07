@@ -93,8 +93,8 @@ groups:
   - name: alert_rules
     rules:
       - alert: KusamaNodeSyncLag
-        expr: (max(substrate_block_height{status="best"}) by (instance) - max(substrate_block_height{status="finalized"}) by (instance)) > 20
-        for: 5m
+        expr: max(substrate_block_height{status="best"} - substrate_block_height{status="finalized"}) > 20
+        for: 10m
         labels:
           severity: critical
         annotations:
@@ -102,12 +102,12 @@ groups:
           description: "Node $NODE is lagging more than 20 blocks behind the network."
       - alert: NodeDown
         expr: up{job="kusama_node"} == 0
-        for: 1m
+        for: 5m
         labels:
           severity: critical
         annotations:
           summary: "Node $NODE down"
-          description: "Node $NODE has been down for more than 1 minute."
+          description: "Node $NODE has been down for more than 5 minutes."
       - alert: HighDiskUsage
         expr: (node_filesystem_avail_bytes{job="node_exporter", fstype!="tmpfs", fstype!="sysfs", fstype!="proc"} / node_filesystem_size_bytes{job="node_exporter", fstype!="tmpfs", fstype!="sysfs", fstype!="proc"}) * 100 < 5
         for: 5m
@@ -117,13 +117,13 @@ groups:
           summary: "High disk usage on $NODE"
           description: "Disk usage is above 95% on $NODE."
       - alert: KusamaNodeNotSyncing
-        expr: substrate_sub_libp2p_sync_is_major_syncing{job="kusama_node"} == 1
-        for: 5m
+        expr: substrate_sub_libp2p_sync_is_major_syncing{job="kusama_node"} == 0
+        for: 10m
         labels:
           severity: critical
         annotations:
           summary: "Node $NODE not syncing"
-          description: "Node $NODE is not syncing blocks for more than 5 minutes."
+          description: "Node $NODE is not syncing blocks for more than 10 minutes."
       - alert: KusamaNodeHighCPUUsage
         expr: rate(process_cpu_seconds_total{job="kusama_node"}[5m]) > 0.8
         for: 5m
