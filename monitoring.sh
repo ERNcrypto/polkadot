@@ -93,7 +93,7 @@ groups:
   - name: alert_rules
     rules:
       - alert: KusamaNodeSyncLag
-        expr: (max(chain_head_height{job="kusama_node"}) - max(chain_node_height{job="kusama_node"})) > 20
+        expr: (max(substrate_block_height{status="best"}) by (instance) - max(substrate_block_height{status="finalized"}) by (instance)) > 20
         for: 5m
         labels:
           severity: critical
@@ -117,7 +117,7 @@ groups:
           summary: "High disk usage on $NODE"
           description: "Disk usage is above 95% on $NODE."
       - alert: KusamaNodeNotSyncing
-        expr: chain_is_syncing{job="kusama_node"} == 0
+        expr: substrate_sub_libp2p_sync_is_major_syncing{job="kusama_node"} == 1
         for: 5m
         labels:
           severity: critical
