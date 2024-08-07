@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Запрос данных у пользователя
+read -p "Enter NODE name: " NODE
+echo "export NODE='$NODE'"
+
 # Извлекаем токен из файла конфигурации Alertmanager
 CONFIG_FILE="/etc/alertmanager/alertmanager.yml"
 TOKEN=$(grep -oP "(?<=/alertmanager/)[^']+" "$CONFIG_FILE")
@@ -111,40 +115,40 @@ groups:
         labels:
           severity: critical
         annotations:
-          summary: "Node \$NODE lagging behind"
-          description: "Node \$NODE is lagging more than 20 blocks behind the network."
+          summary: "Node $NODE lagging behind"
+          description: "Node $NODE is lagging more than 20 blocks behind the network."
       - alert: NodeDown
         expr: up{job="kusama_node"} == 0
         for: 1m
         labels:
           severity: critical
         annotations:
-          summary: "Node \$NODE down"
-          description: "Node \$NODE has been down for more than 1 minute."
+          summary: "Node $NODE down"
+          description: "Node $NODE has been down for more than 1 minute."
       - alert: HighDiskUsage
         expr: (node_filesystem_avail_bytes{job="node_exporter", fstype!="tmpfs", fstype!="sysfs", fstype!="proc"} / node_filesystem_size_bytes{job="node_exporter", fstype!="tmpfs", fstype!="sysfs", fstype!="proc"}) * 100 < 5
         for: 5m
         labels:
           severity: critical
         annotations:
-          summary: "High disk usage on \$NODE"
-          description: "Disk usage is above 95% on \$NODE."
+          summary: "High disk usage on $NODE"
+          description: "Disk usage is above 95% on $NODE."
       - alert: KusamaNodeNotSyncing
         expr: substrate_sub_libp2p_sync_is_major_syncing{job="kusama_node"} == 1
         for: 5m
         labels:
           severity: critical
         annotations:
-          summary: "Node \$NODE not syncing"
-          description: "Node \$NODE is not syncing blocks for more than 5 minutes."
+          summary: "Node $NODE not syncing"
+          description: "Node $NODE is not syncing blocks for more than 5 minutes."
       - alert: KusamaNodeHighCPUUsage
         expr: rate(process_cpu_seconds_total{job="kusama_node"}[5m]) > 0.8
         for: 5m
         labels:
           severity: warning
         annotations:
-          summary: "High CPU usage on \$NODE"
-          description: "CPU usage is above 80% on \$NODE for more than 5 minutes."
+          summary: "High CPU usage on $NODE"
+          description: "CPU usage is above 80% on $NODE for more than 5 minutes."
 EOF
 
 sudo chown prometheus:prometheus rules.yml
