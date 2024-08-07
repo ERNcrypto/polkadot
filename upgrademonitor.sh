@@ -1,22 +1,23 @@
 #!/bin/bash
 
-# Убедитесь, что yq установлен
-if ! command -v yq &> /dev/null
-then
-    echo "yq could not be found, installing..."
-    sudo apt-get update
-    sudo apt-get install -y yq
+# Извлекаем токен из файла конфигурации Alertmanager
+CONFIG_FILE="/etc/alertmanager/alertmanager.yml"
+TOKEN=$(grep -oP "(?<=/alertmanager/)[^']+" "$CONFIG_FILE")
+
+# Определяем IP-адрес машины
+IP_ADDRESS=$(hostname -I | awk '{print $1}')
+
+# Проверяем, удалось ли извлечь токен
+if [ -z "$TOKEN" ]; then
+  echo "Токен не найден в файле конфигурации."
+  exit 1
 fi
 
-# Извлечение токена из файла alertmanager.yml
-TOKEN=$(sudo yq e '.receivers[] | select(.name == "telepush") | .webhook_configs[0].url' /etc/alertmanager/alertmanager.yml | awk -F '/' '{print $NF}')
-echo "Token extracted: $TOKEN"
-echo 'export TOKEN='$TOKEN
-
-read -p "Enter NODE name:" NODE
-echo 'export NODE='$NODE
-read -p "Enter IP server:" IP
-echo 'export IP='$IP
+# Проверяем, удалось ли определить IP-адрес
+if [ -z "$IP_ADDRESS" ]; then
+  echo "Не удалось определить IP-адрес."
+  exit 1
+fi
 
 # Установка node_exporter
 sudo wget $(curl -s https://api.github.com/repos/prometheus/node_exporter/releases/latest | grep "tag_name" | awk '{print "https://github.com/prometheus/node_exporter/releases/download/" substr($2, 2, length($2)-3) "/node_exporter-" substr($2, 3, length($2)-4) ".linux-amd64.tar.gz"}')
@@ -66,16 +67,16 @@ alerting:
   alertmanagers:
   - static_configs:
     - targets:
-      - $IP:9093
+      - $IP_ADDRESS:9093
 scrape_configs:
   - job_name: "node_exporter"
     scrape_interval: 5s
     static_configs:
-      - targets: ["$IP:9100"]
+      - targets: ["$IP_ADDRESS:9100"]
   - job_name: "kusama_node"
     scrape_interval: 5s
     static_configs:
-      - targets: ["$IP:9615"]
+      - targets: ["$IP_ADDRESS:9615"]
 EOF
 
 sudo tee /etc/systemd/system/prometheus.service > /dev/null <<EOF
@@ -110,40 +111,40 @@ groups:
         labels:
           severity: critical
         annotations:
-          summary: "Node $NODE lagging behind"
-          description: "Node $NODE is lagging more than 20 blocks behind the network."
+          summary: "Node \$NODE lagging behind"
+          description: "Node \$NODE is lagging more than 20 blocks behind the network."
       - alert: NodeDown
         expr: up{job="kusama_node"} == 0
         for: 1m
         labels:
           severity: critical
         annotations:
-          summary: "Node $NODE down"
-          description: "Node $NODE has been down for more than 1 minute."
+          summary: "Node \$NODE down"
+          description: "Node \$NODE has been down for more than 1 minute."
       - alert: HighDiskUsage
         expr: (node_filesystem_avail_bytes{job="node_exporter", fstype!="tmpfs", fstype!="sysfs", fstype!="proc"} / node_filesystem_size_bytes{job="node_exporter", fstype!="tmpfs", fstype!="sysfs", fstype!="proc"}) * 100 < 5
         for: 5m
         labels:
           severity: critical
         annotations:
-          summary: "High disk usage on $NODE"
-          description: "Disk usage is above 95% on $NODE."
+          summary: "High disk usage on \$NODE"
+          description: "Disk usage is above 95% on \$NODE."
       - alert: KusamaNodeNotSyncing
         expr: substrate_sub_libp2p_sync_is_major_syncing{job="kusama_node"} == 1
         for: 5m
         labels:
           severity: critical
         annotations:
-          summary: "Node $NODE not syncing"
-          description: "Node $NODE is not syncing blocks for more than 5 minutes."
+          summary: "Node \$NODE not syncing"
+          description: "Node \$NODE is not syncing blocks for more than 5 minutes."
       - alert: KusamaNodeHighCPUUsage
         expr: rate(process_cpu_seconds_total{job="kusama_node"}[5m]) > 0.8
         for: 5m
         labels:
           severity: warning
         annotations:
-          summary: "High CPU usage on $NODE"
-          description: "CPU usage is above 80% on $NODE for more than 5 minutes."
+          summary: "High CPU usage on \$NODE"
+          description: "CPU usage is above 80% on \$NODE for more than 5 minutes."
 EOF
 
 sudo chown prometheus:prometheus rules.yml
@@ -175,7 +176,7 @@ After=network-online.target
 User=root
 Group=root
 Type=simple
-ExecStart=/usr/local/bin/alertmanager --config.file /etc/alertmanager/alertmanager.yml --web.external-url=http://$IP:9093 --cluster.advertise-address='0.0.0.0:9093'
+ExecStart=/usr/local/bin/alertmanager --config.file /etc/alertmanager/alertmanager.yml --web.external-url=http://$IP_ADDRESS:9093 --cluster.advertise-address='0.0.0.0:9093'
 [Install]
 WantedBy=multi-user.target
 EOF
