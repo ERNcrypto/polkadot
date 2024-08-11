@@ -277,3 +277,29 @@ EOF
 sudo systemctl daemon-reload
 sudo systemctl enable polkadot.service
 sudo systemctl restart polkadot.service
+
+
+
+./target/release/polkadot purge-chain --chain=kusama --database=RocksDb -y
+
+sudo curl -o - -L https://snapshots.polkachu.com/snapshots/kusama/kusama_23934069.tar.lz4 | lz4 -c -d - | sudo tar -x -C /root/.local/share/polkadot/chains/ksmcc3/
+
+sudo tee /etc/systemd/system/polkadot.service > /dev/null <<EOF
+[Unit]
+Description=Polkadot Validator Service
+After=network.target
+
+[Service]
+Type=simple
+User=$current_user
+ExecStart=$HOME/polkadot-sdk/target/release/polkadot --validator --name "$name" --chain=kusama --database RocksDb --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' --state-pruning 1000 --prometheus-external --prometheus-port=9615 --insecure-validator-i-know-what-i-do
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+Environment=START
+
+sudo systemctl restart polkadot.service && sudo journalctl -u polkadot.service -f
+
+
+
