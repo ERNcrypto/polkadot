@@ -18,6 +18,15 @@ git checkout polkadot-v1.14.1
 
 cargo build --release
 
+sudo chmod -R 777 /home/$current_user/.local/share/polkadot/chains/ksmcc3/db/full
+
+sudo chmod -R 777 /home/$current_user/polkadot-sdk
+
+sudo systemctl start polkadot.service
+
+sleep 450
+
+
 
 sudo curl -o - -L https://kusama.services-ernventures.com/kusama/snap_kusama.tar.lz4 | lz4 -c -d - | sudo tar -x -C /home/$current_user/.local/share/polkadot/chains/ksmcc3/
 
