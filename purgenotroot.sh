@@ -18,7 +18,9 @@ git checkout polkadot-v1.14.1
 
 cargo build --release
 
-sudo curl -o - -L https://snapshots.polkachu.com/snapshots/kusama/kusama_23934069.tar.lz4 | lz4 -c -d - | sudo tar -x -C /home/current_user/.local/share/polkadot/chains/ksmcc3/
+
+
+sudo curl -o - -L https://snapshots.polkachu.com/snapshots/kusama/kusama_23934069.tar.lz4 | lz4 -c -d - | sudo tar -x -C /home/$current_user/.local/share/polkadot/chains/ksmcc3/
 
 sudo chmod -R 777 /home/$current_user/.local/share/polkadot/chains/ksmcc3/db/full
 
