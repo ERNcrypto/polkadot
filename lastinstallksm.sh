@@ -311,6 +311,10 @@ StandardOutput=journal
 StandardError=journal
 Environment=START
 
+[Install]
+WantedBy=multi-user.target
+EOF
+
 sudo systemctl restart polkadot.service && sudo journalctl -u polkadot.service -f
 
 
