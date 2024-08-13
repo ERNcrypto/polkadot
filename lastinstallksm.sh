@@ -9,6 +9,8 @@ read -p "TOKEN telegrambot:" TOKEN
 echo 'export TOKEN='$TOKEN
 read -p "Enter STARTNAME :" STARTNAME
 echo 'export STARTNAME='$STARTNAME
+read -p "Enter STARTNAME :" STARTNAME1
+echo 'export STARTNAME='$STARTNAME1
 
 # Установка node_exporter
 sudo wget $(curl -s https://api.github.com/repos/prometheus/node_exporter/releases/latest | grep "tag_name" | awk '{print "https://github.com/prometheus/node_exporter/releases/download/" substr($2, 2, length($2)-3) "/node_exporter-" substr($2, 3, length($2)-4) ".linux-amd64.tar.gz"}')
@@ -302,7 +304,7 @@ After=network.target
 [Service]
 Type=simple
 User=$current_user
-ExecStart=$HOME/polkadot-sdk/target/release/polkadot --validator --name "$STARTNAME" --chain=kusama --database RocksDb --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' --state-pruning 1000 --prometheus-external --prometheus-port=9615 --insecure-validator-i-know-what-i-do
+ExecStart=$HOME/polkadot-sdk/target/release/polkadot --validator --name "$STARTNAME1" --chain=kusama --database RocksDb --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' --state-pruning 1000 --prometheus-external --prometheus-port=9615 --insecure-validator-i-know-what-i-do
 Restart=always
 RestartSec=10
 StandardOutput=journal
