@@ -284,7 +284,7 @@ sudo systemctl stop polkadot.service
 
 ./target/release/polkadot purge-chain --chain=kusama --database=RocksDb -y
 
-sudo curl -o - -L https://snapshots.polkachu.com/snapshots/kusama/kusama_23934069.tar.lz4 | lz4 -c -d - | sudo tar -x -C /root/.local/share/polkadot/chains/ksmcc3/
+sudo curl -o - -L https://kusama.services-ernventures.com/kusama/snap_kusama.tar.lz4 | lz4 -c -d - | sudo tar -x -C /home/$curre nt_user/.local/share/polkadot/chains/ksmcc3/
 
 sudo tee /etc/systemd/system/polkadot.service > /dev/null <<EOF
 [Unit]
