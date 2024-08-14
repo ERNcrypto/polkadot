@@ -259,6 +259,8 @@ sudo chmod -R 777 /home/$current_user/polkadot-sdk
 
 sudo chmod -R 777 /home/$current_user/.local/share/polkadot/chains/ksmcc3/db/full
 
+sudo chmod -R 777 /home/$current_user/.local/share/polkadot/chains/ksmcc3/
+
 # Create the service file using the node name variable and current username
 sudo tee /etc/systemd/system/polkadot.service > /dev/null <<EOF
 [Unit]
@@ -296,6 +298,8 @@ sudo chmod -R 777 /home/$current_user/polkadot-sdk
 
 sudo chmod -R 777 /home/$current_user/.local/share/polkadot/chains/ksmcc3/db/full
 
+sudo chmod -R 777 /home/$current_user/.local/share/polkadot/chains/ksmcc3/
+
 sudo tee /etc/systemd/system/polkadot.service > /dev/null <<EOF
 [Unit]
 Description=Polkadot Validator Service
@@ -316,6 +320,3 @@ WantedBy=multi-user.target
 EOF
 
 sudo systemctl restart polkadot.service && sudo journalctl -u polkadot.service -f
-
-
-
