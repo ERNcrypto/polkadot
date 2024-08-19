@@ -1,4 +1,7 @@
 #!/bin/bash
+cd
+
+cd polkadot-sdk
 
 sudo systemctl stop polkadot.service
 
