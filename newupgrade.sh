@@ -10,6 +10,8 @@ sudo git fetch
 
 git checkout polkadot-v1.15.1
 
+cargo update -p time
+
 cargo build --release
 
 sudo systemctl restart polkadot.service
