@@ -15,6 +15,8 @@ cd polkadot-sdk
  
 git checkout polkadot-v1.14.1
 
+
+
 cargo build --release
 
 sudo curl -o - -L https://kusama.services-ernventures.com/kusama/snap_kusama.tar.lz4 | lz4 -c -d - | sudo tar -x -C /root/.local/share/polkadot/chains/ksmcc3/
