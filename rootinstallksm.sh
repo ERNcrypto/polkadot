@@ -264,7 +264,7 @@ After=network.target
 [Service]
 Type=simple
 User=$current_user
-ExecStart=root/polkadot-sdk/target/release/polkadot --validator --name "$STARTNAME" --chain=kusama --database RocksDb --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' --state-pruning 1000 --prometheus-external --prometheus-port=9615 --insecure-validator-i-know-what-i-do --unsafe-force-node-key-generation
+ExecStart=$HOME/polkadot-sdk/target/release/polkadot --validator --name "$STARTNAME" --chain=kusama --database RocksDb --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' --state-pruning 1000 --prometheus-external --prometheus-port=9615 --insecure-validator-i-know-what-i-do --unsafe-force-node-key-generation
 Restart=always
 RestartSec=10
 StandardOutput=journal
