@@ -6,9 +6,9 @@
 # Purge not root DOT/KSM
     source <(curl -s https://raw.githubusercontent.com/ERNcrypto/polkadot/main/purgenotroot.sh)
 # Install kusama not root
-    source <(curl -s https://raw.githubusercontent.com/ERNcrypto/polkadot/main/notrootinstallksm.sh.sh)
+    source <(curl -s https://raw.githubusercontent.com/ERNcrypto/polkadot/main/notrootinstallksm.sh)
 # Install kusama root
-    source <(curl -s https://raw.githubusercontent.com/ERNcrypto/polkadot/main/rootinstallksm.sh.sh)
+    source <(curl -s https://raw.githubusercontent.com/ERNcrypto/polkadot/main/rootinstallksm.sh)
 # Install polkadot 
     source <(curl -s https://raw.githubusercontent.com/ERNcrypto/polkadot/main/installdotcurl.sh)
 
