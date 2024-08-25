@@ -115,13 +115,13 @@ groups:
           summary: "Node $NODE down"
           description: "Node $NODE has been down for more than 1 minute."
       - alert: HighDiskUsage
-        expr: (node_filesystem_avail_bytes{job="node_exporter", fstype!="tmpfs", fstype!="sysfs", fstype!="proc"} / node_filesystem_size_bytes{job="node_exporter", fstype!="tmpfs", fstype!="sysfs", fstype!="proc"}) * 100 < 5
+        expr: (node_filesystem_avail_bytes{job="node_exporter", fstype!="tmpfs", fstype!="sysfs", fstype!="proc"} / node_filesystem_size_bytes{job="node_exporter", fstype!="tmpfs", fstype!="sysfs", fstype!="proc"}) * 100 < 2
         for: 5m
         labels:
           severity: critical
         annotations:
           summary: "High disk usage on $NODE"
-          description: "Disk usage is above 95% on $NODE."
+          description: "Disk usage is above 98% on $NODE."
       - alert: KusamaNodeNotSyncing
         expr: substrate_sub_libp2p_sync_is_major_syncing{job="kusama_node"} == 1
         for: 5m
