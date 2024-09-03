@@ -8,7 +8,7 @@ sudo systemctl stop polkadot.service
 
 sudo git fetch
 
-git checkout polkadot-v1.15.1
+git checkout polkadot-v1.15.2
 
 cargo update -p time
 
