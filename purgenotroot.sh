@@ -14,7 +14,7 @@ git clone https://github.com/paritytech/polkadot-sdk.git
 
 cd polkadot-sdk
  
-git checkout polkadot-v1.14.1
+git checkout polkadot-v1.15.2
 
 cargo build --release
 
