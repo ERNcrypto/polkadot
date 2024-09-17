@@ -319,4 +319,6 @@ Environment=START
 WantedBy=multi-user.target
 EOF
 
+sudo systemctl daemon-reload
+
 sudo systemctl restart polkadot.service && sudo journalctl -u polkadot.service -f
