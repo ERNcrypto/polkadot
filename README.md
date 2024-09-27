@@ -1,6 +1,8 @@
 # POLKADOT
 # Upgrade DOT/KSM
     source <(curl -s https://raw.githubusercontent.com/ERNcrypto/polkadot/main/newupgrade.sh)
+# Upgrade notroot DOT/KSM
+    source <(curl -s https://raw.githubusercontent.com/ERNcrypto/polkadot/main/upgradenotroot.sh)
 # Purge DOT/KSM
     source <(curl -s https://raw.githubusercontent.com/ERNcrypto/polkadot/main/purge.sh)
 # Purge not root DOT/KSM
