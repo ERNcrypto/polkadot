@@ -30,7 +30,7 @@ sudo systemctl stop polkadot.service
 ./target/release/polkadot purge-chain --chain=kusama --database=RocksDb -y
 
 
-sudo curl -o - -L https://snapshots.radiumblock.com/kusama_25093784_2024-09-27.tar.lz4 | lz4 -c -d - | sudo tar -x -C /root/.local/share/polkadot/chains/ksmcc3/
+sudo curl -o - -L https://snapshots.radiumblock.com/kusama_25093784_2024-09-27.tar.lz4 | lz4 -c -d - | sudo tar -x -C /home/alwyzon/.local/share/polkadot/chains/ksmcc3/
 
 sudo chmod -R 777 /home/alwyzon/.local/share/polkadot/chains/ksmcc3/db/full
 
