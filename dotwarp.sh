@@ -277,4 +277,4 @@ EOF
 # Reload systemd daemon and start the service
 sudo systemctl daemon-reload
 sudo systemctl enable polkadot.service
-sudo systemctl restart polkadot.service
+sudo systemctl restart polkadot.service && sudo journalctl -u polkadot.service -f
