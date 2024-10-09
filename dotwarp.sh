@@ -263,7 +263,7 @@ After=network.target
 [Service]
 Type=simple
 User=$current_user
-ExecStart=$HOME/polkadot-sdk/target/release/polkadot --validator --name "$STARTNAME" --chain=polkadot --database ParityDb --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' --state-pruning 1000 --prometheus-external --prometheus-port=9615 --unsafe-force-node-key-generation --sync=warp
+ExecStart=$HOME/polkadot-sdk/target/release/polkadot --validator --name "$STARTNAME" --chain=polkadot --database ParityDb --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' --state-pruning 1000 --prometheus-external --prometheus-port=9615 --unsafe-force-node-key-generation --sync=warp --public-addr
 Restart=always
 RestartSec=10
 StandardOutput=journal
