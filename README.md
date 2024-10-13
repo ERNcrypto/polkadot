@@ -1,5 +1,5 @@
 # POLKADOT
-# Upgrade DOT/KSM
+# 📋 Upgrade DOT/KSM
     source <(curl -s https://raw.githubusercontent.com/ERNcrypto/polkadot/main/newupgrade.sh)
 # Upgrade notroot DOT/KSM
     source <(curl -s https://raw.githubusercontent.com/ERNcrypto/polkadot/main/upgradenotroot.sh)
