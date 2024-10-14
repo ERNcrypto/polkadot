@@ -252,6 +252,10 @@ rustup update
 
 cargo update -p time
 
+sudo apt update
+sudo apt install build-essential clang -y
+sudo apt-get install libc6-dev -y 
+
 cargo build --release
 
 # Create the service file using the node name variable and current username
