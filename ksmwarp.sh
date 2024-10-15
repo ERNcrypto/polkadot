@@ -120,7 +120,7 @@ groups:
           severity: critical
         annotations:
           summary: "High disk usage on $NODE"
-          description: "Disk usage is above 98% on $NODE."
+          description: "Disk usage is above 90% on $NODE."
       - alert: KusamaNodeNotSyncing
         expr: substrate_sub_libp2p_sync_is_major_syncing{job="kusama_node"} == 1
         for: 5m
