@@ -11,7 +11,7 @@ read -p "Enter STARTNAME :" STARTNAME
 echo 'export STARTNAME='$STARTNAME
 
 
-# Установка node_exporter
+# Install node_exporter
 sudo wget $(curl -s https://api.github.com/repos/prometheus/node_exporter/releases/latest | grep "tag_name" | awk '{print "https://github.com/prometheus/node_exporter/releases/download/" substr($2, 2, length($2)-3) "/node_exporter-" substr($2, 3, length($2)-4) ".linux-amd64.tar.gz"}')
 sudo tar xvf node_exporter-*.tar.gz
 sudo cp ./node_exporter-*.linux-amd64/node_exporter /usr/local/bin/
@@ -36,7 +36,7 @@ sudo systemctl daemon-reload
 sudo systemctl start node_exporter.service
 sudo systemctl enable node_exporter.service
 
-# Установка prometheus
+# Install prometheus
 sudo wget $(curl -s https://api.github.com/repos/prometheus/prometheus/releases/latest | grep "tag_name" | awk '{print "https://github.com/prometheus/prometheus/releases/download/" substr($2, 2, length($2)-3) "/prometheus-" substr($2, 3, length($2)-4) ".linux-amd64.tar.gz"}')
 sudo tar xvf prometheus-*.tar.gz
 sudo cp ./prometheus-*.linux-amd64/prometheus /usr/local/bin/
