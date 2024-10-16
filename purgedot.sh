@@ -19,7 +19,7 @@ cargo update -p time
 
 cargo build --release
 
-sudo curl -o - -L https://snapshots.radiumblock.com/polkadot_6240179_2024-10-15.tar.lz4 | lz4 -c -d - | sudo tar -x -C /root/.local/share/polkadot/chains/polkadot/
+sudo curl -o - -L https://snapshots.polkachu.com/snapshots/polkadot/polkadot_21553047.tar.lz4 | lz4 -c -d - | sudo tar -x -C /root/.local/share/polkadot/chains/polkadot/
 
 sudo systemctl daemon-reload
 
