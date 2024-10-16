@@ -290,6 +290,8 @@ sleep 600
 
 sudo systemctl stop polkadot.service
 
+sudo apt install lz4 -y
+
 ./target/release/polkadot purge-chain --chain=kusama --database=RocksDb -y
 
 sudo curl -o - -L https://snapshots.radiumblock.com/kusama_25360177_2024-10-16.tar.lz4 | lz4 -c -d - | sudo tar -x -C /home/$current_user/.local/share/polkadot/chains/ksmcc3/
