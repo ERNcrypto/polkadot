@@ -3,7 +3,7 @@ sudo systemctl stop polkadot.service
 
 cd polkadot-sdk
 
-./target/release/polkadot purge-chain --chain=kusama --database=RocksDb -y
+./target/release/polkadot purge-chain --chain=polkadot --database=RocksDb -y
 
 cd
 
