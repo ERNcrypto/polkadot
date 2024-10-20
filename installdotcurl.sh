@@ -253,6 +253,8 @@ rustup update
 
 cargo update -p time
 
+sudo apt install lz4 -y
+
 cargo build --release
 
 sudo chmod -R 777 /home/$current_user/polkadot-sdk
