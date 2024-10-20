@@ -294,7 +294,7 @@ sudo apt install lz4 -y
 
 ./target/release/polkadot purge-chain --chain=kusama --database=RocksDb -y
 
-sudo curl -o - -L https://snapshots.radiumblock.com/kusama_25388307_2024-10-18.tar.lz4 | lz4 -c -d - | sudo tar -x -C /home/$current_user/.local/share/polkadot/chains/ksmcc3/
+sudo curl -o - -L https://snapshots.radiumblock.com/kusama_25416509_2024-10-20.tar.lz4 | lz4 -c -d - | sudo tar -x -C /home/$current_user/.local/share/polkadot/chains/ksmcc3/
 
 sudo chmod -R 777 /home/$current_user/polkadot-sdk
 
