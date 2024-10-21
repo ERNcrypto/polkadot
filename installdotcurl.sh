@@ -294,7 +294,7 @@ sudo systemctl stop polkadot.service
 
 ./target/release/polkadot purge-chain --chain=polkadot --database=RocksDb -y
 
-sudo curl -o - -L https://snapshots.radiumblock.com/polkadot_6275917_2024-10-20.tar.lz4 | lz4 -c -d - | sudo tar -x -C /home/$current_user/.local/share/polkadot/chains/polkadot/
+sudo curl -o - -L https://snapshots.radiumblock.com/polkadot_6283025_2024-10-21.tar.lz4 | lz4 -c -d - | sudo tar -x -C /home/$current_user/.local/share/polkadot/chains/polkadot/
 
 sudo chmod -R 777 /home/$current_user/polkadot-sdk
 
