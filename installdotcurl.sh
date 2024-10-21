@@ -288,7 +288,7 @@ sudo systemctl daemon-reload
 sudo systemctl enable polkadot.service
 sudo systemctl restart polkadot.service
 
-sleep 600
+sleep 300
 
 sudo systemctl stop polkadot.service
 
