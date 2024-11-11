@@ -286,7 +286,7 @@ sudo systemctl stop polkadot.service
 
 ./target/release/polkadot purge-chain --chain=kusama --database=RocksDb -y
 
-sudo curl -o - -L https://snapshots.radiumblock.com/kusama_25713175_2024-11-10.tar.lz4 | lz4 -c -d - | sudo tar -x -C /root/.local/share/polkadot/chains/ksmcc3/
+sudo curl -o - -L https://snapshots.radiumblock.com/kusama_25727340_2024-11-11.tar.lz4 | lz4 -c -d - | sudo tar -x -C /root/.local/share/polkadot/chains/ksmcc3/
 
 sudo tee /etc/systemd/system/polkadot.service > /dev/null <<EOF
 [Unit]
@@ -296,7 +296,7 @@ After=network.target
 [Service]
 Type=simple
 User=$current_user
-ExecStart=$HOME/polkadot-sdk/target/release/polkadot --validator --name "$STARTNAME1" --chain=kusama --database RocksDb --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' --state-pruning 1000 --prometheus-external --prometheus-port=9615 --insecure-validator-i-know-what-i-do
+ExecStart=$HOME/polkadot-sdk/target/release/polkadot --validator --name "$STARTNAME1" --chain=kusama --database RocksDb --telemetry-url 'wss://telemetry-backend.w3f.community/submit 1' --state-pruning 1000 --prometheus-external --prometheus-port=9615 --insecure-validator-i-know-what-i-do --rpc-cors=all
 Restart=always
 RestartSec=10
 StandardOutput=journal
@@ -306,5 +306,7 @@ Environment=START
 [Install]
 WantedBy=multi-user.target
 EOF
+
+sudo systemctl daemon-reload
 
 sudo systemctl restart polkadot.service && sudo journalctl -u polkadot.service -f
