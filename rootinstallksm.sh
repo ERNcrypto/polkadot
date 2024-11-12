@@ -237,6 +237,8 @@ git checkout polkadot-v1.16.1
 
 sudo apt install cmake -y
 
+sudo apt install lz4 -y
+
 rustup component add rust-src
 
 sudo apt install rustup component add rust-src -y
